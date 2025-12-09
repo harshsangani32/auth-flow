@@ -16,4 +16,13 @@ export class User {
 
   @Column()
   password!: string;
+
+  @Column({ default: false })
+  isVerified!: boolean;
+
+  @Column({ nullable: true })
+  otp!: string | null;
+
+  @Column({ type: "timestamp", nullable: true })
+  otpExpiry!: Date | null;
 }

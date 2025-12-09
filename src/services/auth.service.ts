@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import { AppDataSource } from "../config/data-source";
 import { User } from "../entities/User";
 import { generateToken } from "../utils/jwt.util";
+import { sendOTPEmail } from "./email.service";
+import { generateOTP, saveOTP } from "./otp.service";
 
 dotenv.config();
 const userRepo = AppDataSource.getRepository(User);
@@ -25,9 +27,21 @@ export const registerUser = async (
     lastName,
     email,
     password: hashedPassword,
+    isVerified: false,
+    otp: null,
+    otpExpiry: null,
   });
 
-  return await userRepo.save(newUser);
+  const savedUser = await userRepo.save(newUser);
+
+  // Generate and send OTP
+  const otp = generateOTP();
+  await saveOTP(email, otp);
+  await sendOTPEmail(email, otp, firstName);
+
+  // Return user without password
+  const { password: _, ...userWithoutPassword } = savedUser;
+  return userWithoutPassword;
 };
 
 export const loginUser = async (email: string, password: string) => {
@@ -39,6 +53,11 @@ export const loginUser = async (email: string, password: string) => {
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     throw new Error("Invalid email or password");
+  }
+
+  // Check if user is verified
+  if (!user.isVerified) {
+    throw new Error("Please verify your email before logging in. Check your email for OTP.");
   }
 
   // Generate JWT token
