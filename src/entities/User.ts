@@ -25,4 +25,7 @@ export class User {
 
   @Column({ type: "timestamp", nullable: true })
   otpExpiry!: Date | null;
+
+  @Column({ nullable: true })
+  profilePhotoUrl!: string | null;
 }

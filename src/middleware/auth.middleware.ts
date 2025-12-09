@@ -1,4 +1,5 @@
-import { NextFunction, Request, Response } from "express";
+import type { Request } from "express";
+import { NextFunction, Response } from "express";
 import { verifyToken } from "../utils/jwt.util";
 
 export interface AuthRequest extends Request {
@@ -6,6 +7,7 @@ export interface AuthRequest extends Request {
     userId: number;
     email: string;
   };
+  file?: Express.Multer.File;
 }
 
 export const authenticateToken = (
