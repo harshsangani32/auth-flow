@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import "reflect-metadata";
 import { DataSource } from "typeorm";
+import { Admin } from "../entities/Admin";
 import { User } from "../entities/User";
 
 dotenv.config();
@@ -12,7 +13,7 @@ export const AppDataSource = new DataSource({
   username: "postgres",
   password: "Mysql@2003",
   database: "auth-flow",
-  entities: [User],
+  entities: [User, Admin],
   synchronize: true, // auto create tables for beginners
 });
 
