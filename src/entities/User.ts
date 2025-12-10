@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Attendance } from "./Attendance";
 
 @Entity()
 export class User {
@@ -28,4 +29,8 @@ export class User {
 
   @Column({ nullable: true })
   profilePhotoUrl!: string | null;
+
+  // Reverse relationship: One User can have many Attendance records
+  @OneToMany(() => Attendance, (attendance) => attendance.user)
+  attendance!: Attendance[];
 }

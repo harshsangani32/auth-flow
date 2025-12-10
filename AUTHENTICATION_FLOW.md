@@ -259,3 +259,8 @@ The Bearer token authentication works like this:
 
 The token proves the admin is authenticated without sending credentials on every request!
 
+
+
+
+
+
